@@ -15,17 +15,17 @@ public class Item {
         this.valorEfecto = valorEfecto;
     }
 
-    public void aplicarEfecto(Heroe heroe) {
+    public void aplicarEfecto(Hero hero) {
 
         if (tipoItem.equals("POCION_VIDA")) {
 
-            int nuevaVida = heroe.getVidaActual() + valorEfecto;
-            if (nuevaVida > heroe.getVidaMax()) {nuevaVida = heroe.getVidaMax();}
+            int nuevaVida = hero.getVidaActual() + valorEfecto;
+            if (nuevaVida > hero.getVidaMax()) {nuevaVida = hero.getVidaMax();}
 
-            heroe.setVidaActual(nuevaVida);}
+            hero.setVidaActual(nuevaVida);}
 
         if (tipoItem.equals("ARMA_ATAQUE")) {
-            heroe.setFuerzaAtaque(heroe.getFuerzaAtaque() + valorEfecto);}
+            hero.setFuerzaAtaque(hero.getFuerzaAtaque() + valorEfecto);}
     }
 
 }

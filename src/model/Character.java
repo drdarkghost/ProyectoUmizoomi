@@ -1,6 +1,6 @@
 package model;
 
-public class Personaje {
+public class Character {
 
     private String nombre;
     private int vidaMax;
@@ -9,7 +9,7 @@ public class Personaje {
     private int posX;
     private int posY;
 
-    public Personaje(String nombre, int vidaMax, int fuerzaAtaque, int posX, int posY) {
+    public Character(String nombre, int vidaMax, int fuerzaAtaque, int posX, int posY) {
 
         this.nombre = nombre;
         this.vidaMax = vidaMax;
@@ -31,7 +31,7 @@ public class Personaje {
         }
     }
 
-    public void atacar(Personaje objetivo) {
+    public void atacar(Character objetivo) {
         objetivo.recibirDano(fuerzaAtaque);
     }
 

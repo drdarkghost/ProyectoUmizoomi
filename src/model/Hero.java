@@ -1,13 +1,13 @@
 package model;
 
-public class Heroe extends Personaje {
+public class Hero extends Character {
 
     private String tipoClase;
     private int oroAcumulado;
     private boolean tieneLlave;
     private Item[] inventario;
 
-    public Heroe() {
+    public Hero() {
 
         super();
         inventario = new Item[5];
