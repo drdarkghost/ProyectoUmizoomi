@@ -1,4 +1,4 @@
-package model;
+package cr.ac.ucr.paraiso.model;
 
 public class Item {
 

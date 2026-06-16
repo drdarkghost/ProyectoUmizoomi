@@ -1,7 +1,7 @@
-package main;
+package cr.ac.ucr.paraiso.main;
 
-import model.Hero;
-import model.Item;
+import cr.ac.ucr.paraiso.model.Hero;
+import cr.ac.ucr.paraiso.model.Item;
 
 public class Main {
 
