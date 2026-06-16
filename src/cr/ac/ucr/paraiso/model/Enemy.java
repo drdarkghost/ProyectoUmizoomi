@@ -26,4 +26,5 @@ public class Enemy extends Character {
     public String getMonsterType() {
         return monsterType;
     }
+    //ah
 }
