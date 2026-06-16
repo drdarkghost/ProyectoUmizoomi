@@ -2,30 +2,51 @@ package cr.ac.ucr.paraiso.model;
 
 public class Item {
 
-    private String nombre;
-    private String descripcion;
-    private String tipoItem;
-    private int valorEfecto;
+    private String name;
+    private String description;
+    private String itemType;
+    private int effectValue;
 
-    public Item(String nombre, String descripcion, String tipoItem, int valorEfecto) {
+    public Item(String name,String description,String itemType,int effectValue) {
 
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.tipoItem = tipoItem;
-        this.valorEfecto = valorEfecto;
+        this.name = name;
+        this.description = description;
+        this.itemType = itemType;
+        this.effectValue = effectValue;
     }
 
-    public void aplicarEfecto(Hero hero) {
+    public void applyEffect(Hero hero) {
 
-        if (tipoItem.equals("POCION_VIDA")) {
+        if (itemType.equals("HEALTH_POTION")) {
 
-            int nuevaVida = hero.getVidaActual() + valorEfecto;
-            if (nuevaVida > hero.getVidaMax()) {nuevaVida = hero.getVidaMax();}
+            int newHealth = hero.getCurrentHealth() + effectValue;
 
-            hero.setVidaActual(nuevaVida);}
+            if (newHealth > hero.getMaxHealth()) {
+                newHealth = hero.getMaxHealth();
+            }
 
-        if (tipoItem.equals("ARMA_ATAQUE")) {
-            hero.setFuerzaAtaque(hero.getFuerzaAtaque() + valorEfecto);}
+            hero.setCurrentHealth(newHealth);
+        }
+
+        if (itemType.equals("ATTACK_WEAPON")) {
+
+            hero.setAttackPower(hero.getAttackPower() + effectValue);
+        }
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getItemType() {
+        return itemType;
+    }
+
+    public int getEffectValue() {
+        return effectValue;
+    }
 }

@@ -8,15 +8,13 @@ public class Main {
     public static void main(String[] args) {
 
         Hero hero =
-                new Hero("Gabriel", 100, 20, 0, 0, "Guerrero");
+                new Hero("Gabriel", 100, 20, 0, 0, "Warrior");
 
-        Item pocion =
-                new Item("Pocion", "Recupera vida", "POCION_VIDA", 25);
+        Item potion =
+                new Item("Health Potion", "Restores health", "HEALTH_POTION", 25);
 
-        hero.agregarItem(pocion);
+        hero.addItem(potion);
 
-        System.out.println("Heroe creado correctamente");
-        System.out.println("Heroe: " + hero.getNombre());
-        System.out.println("Clase: " + hero.getTipoClase());
+        System.out.println("Hero created successfully");
     }
 }

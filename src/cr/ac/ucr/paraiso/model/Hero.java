@@ -1,31 +1,47 @@
 package cr.ac.ucr.paraiso.model;
 
 public class Hero extends Character {
+    private String heroClass;
+    private int gold;
+    private boolean hasKey;
+    private Item[] inventory;
 
-    private String tipoClase;
-    private int oroAcumulado;
-    private boolean tieneLlave;
-    private Item[] inventario;
+    public Hero(String name, int maxHealth,int attackPower,int posX,int posY,String heroClass) {
 
-    public Hero() {
+            super(name, maxHealth, attackPower, posX, posY);
 
-        super();
-        inventario = new Item[5];
-        oroAcumulado = 0;
-        tieneLlave = false;
-    }
-
-    public boolean agregarItem(Item item) {
-
-        for (int i = 0; i < inventario.length; i++) {
-
-            if (inventario[i] == null) {
-
-                inventario[i] = item;
-                return true;
-            }
+            this.heroClass = heroClass;
+            this.gold = 0;
+            this.hasKey = false;
+            this.inventory = new Item[5];
         }
 
-        return false;
+        public boolean addItem(Item item) {
+
+            for (int i = 0; i < inventory.length; i++) {
+
+                if (inventory[i] == null) {
+                    inventory[i] = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public String getHeroClass() {
+            return heroClass;
+        }
+
+        public int getGold() {
+            return gold;
+        }
+
+        public boolean hasKey() {
+            return hasKey;
+        }
+
+        public Item[] getInventory() {
+            return inventory;
+        }
     }
-}
