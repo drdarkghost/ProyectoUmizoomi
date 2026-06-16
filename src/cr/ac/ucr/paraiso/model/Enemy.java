@@ -5,13 +5,8 @@ public class Enemy extends Character {
     private int goldReward;
     private String monsterType;
 
-    public Enemy(String name,
-                 int maxHealth,
-                 int attackPower,
-                 int posX,
-                 int posY,
-                 int goldReward,
-                 String monsterType) {
+    public Enemy(String name,int maxHealth,int attackPower,
+                 int posX, int posY, int goldReward, String monsterType) {
 
         super(name, maxHealth, attackPower, posX, posY);
 
@@ -26,5 +21,5 @@ public class Enemy extends Character {
     public String getMonsterType() {
         return monsterType;
     }
-    //ah
+
 }

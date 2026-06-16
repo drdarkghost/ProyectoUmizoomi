@@ -6,7 +6,8 @@ public class Hero extends Character {
     private boolean hasKey;
     private Item[] inventory;
 
-    public Hero(String name, int maxHealth,int attackPower,int posX,int posY,String heroClass) {
+    public Hero(String name, int maxHealth,int attackPower,
+                int posX,int posY,String heroClass) {
 
             super(name, maxHealth, attackPower, posX, posY);
 

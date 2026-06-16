@@ -9,7 +9,8 @@ public class Character {
     private int posX;
     private int posY;
 
-    public Character(String name, int maxHealth, int attackPower, int posX, int posY) {
+    public Character(String name, int maxHealth, int attackPower,
+                     int posX, int posY) {
 
         this.name = name;
         this.maxHealth = maxHealth;
