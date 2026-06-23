@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class Interfaz extends JFrame {
 
-    public Interfaz() {
+    public void run() {
 
         setTitle("Proyecto Umizoomi");
         setSize(1200, 800);

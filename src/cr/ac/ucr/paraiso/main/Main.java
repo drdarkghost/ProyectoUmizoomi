@@ -5,6 +5,7 @@ import cr.ac.ucr.paraiso.view.Interfaz;
 public class Main {
 
     public static void main(String[] args) {
-        new Interfaz();
+        Interfaz interfax = new Interfaz();
+        interfax.run();
     }
 }
