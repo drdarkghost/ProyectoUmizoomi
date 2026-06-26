@@ -1,5 +1,6 @@
 package cr.ac.ucr.paraiso.view;
 
+import cr.ac.ucr.paraiso.model.Map;
 import javax.swing.*;
 import java.awt.*;
 
@@ -27,14 +28,26 @@ public class Interfaz extends JFrame {
         JPanel centro = new JPanel(new BorderLayout());
 
         // Zona del mapa
-        JPanel mapaPanel = new JPanel();
-        mapaPanel.setBackground(new Color(70, 120, 70));
-        mapaPanel.setBorder(BorderFactory.createTitledBorder("Mapa"));
+        Map gameMap = new Map();
+        char[][] map = gameMap.getMap();
 
-        JLabel mapaLabel = new JLabel("Aquí se mostrará el mapa");
-        mapaLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        JPanel mapPanel = new JPanel(new GridLayout(9, 9));
+        mapPanel.setBackground(new Color(70, 120, 70));
+        mapPanel.setBorder(BorderFactory.createTitledBorder("Game Map"));
 
-        mapaPanel.add(mapaLabel);
+        for (int row = 0; row < map.length; row++) {
+            for (int col = 0; col < map[row].length; col++) {
+
+                JLabel cell = new JLabel(String.valueOf(map[row][col]), SwingConstants.CENTER);
+
+                cell.setFont(new Font("Arial", Font.BOLD, 24));
+                cell.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                cell.setOpaque(true);
+                cell.setBackground(Color.WHITE);
+
+                mapPanel.add(cell);
+            }
+        }
 
         // Panel lateral
         JPanel infoPanel = new JPanel();
@@ -57,7 +70,7 @@ public class Interfaz extends JFrame {
         infoPanel.add(new JLabel("Inventario: "));
         infoPanel.add(Box.createVerticalStrut(20));
 
-        centro.add(mapaPanel, BorderLayout.CENTER);
+        centro.add(mapPanel, BorderLayout.CENTER);
         centro.add(infoPanel, BorderLayout.EAST);
 
         add(centro, BorderLayout.CENTER);
