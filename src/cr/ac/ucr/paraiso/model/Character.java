@@ -9,6 +9,13 @@ public class Character {
     private int posX;
     private int posY;
 
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+    public void setPosY(int posY) {
+        this.posY = posY;
+    }
+
     public Character(String name, int maxHealth, int attackPower,
                      int posX, int posY) {
 
