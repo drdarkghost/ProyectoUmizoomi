@@ -10,7 +10,7 @@ public class GameController {
 
     public GameController() {
         gameMap = new Map();
-        hero = new Hero("Geo", 100, 20, 0, 0, "Math Hero");
+        hero = new Hero("Lechuguin", 100, 20, 0, 0, "caballero");
     }
 
     public char[][] getMap() {
@@ -24,13 +24,13 @@ public class GameController {
     public String moveHero(int newRow, int newCol) {
 
         if (newRow < 0 || newRow >= 9 || newCol < 0 || newCol >= 9) {
-            return "You cannot move outside the map.";
+            return "No puedes salir de los limites del mapa";
         }
 
         char destination = gameMap.getCell(newRow, newCol);
 
         if (destination == 'W') {
-            return "You cannot move there. There is a wall.";
+            return "No puedes avanzar aqui, hay una pared";
         }
 
         gameMap.setCell(hero.getPosX(), hero.getPosY(), ' ');
@@ -52,6 +52,6 @@ public class GameController {
             return "Encontraste un cofre!!";
         }
 
-        return "Hero moved successfully.";
+        return "El heroe se ha movido";
     }
 }
