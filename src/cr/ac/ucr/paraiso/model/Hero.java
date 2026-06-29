@@ -107,6 +107,16 @@ public class Hero extends Character {
 
     }
 
+    public void setItem(int index, Item item) {
+
+        if (index >= 0 && index < inventory.length) {
+
+            inventory[index] = item;
+
+        }
+
+    }
+
     public Item getItem(int index) {
 
         if (index < 0 || index >= inventory.length) {

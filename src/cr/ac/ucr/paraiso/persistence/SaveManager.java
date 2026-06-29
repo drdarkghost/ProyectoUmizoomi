@@ -1,6 +1,7 @@
 package cr.ac.ucr.paraiso.persistence;
 
 import cr.ac.ucr.paraiso.model.Hero;
+import cr.ac.ucr.paraiso.model.Item;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,6 +23,22 @@ public class SaveManager {
         data.add(String.valueOf(hero.hasKey()));
         data.add(String.valueOf(hero.getPosX()));
         data.add(String.valueOf(hero.getPosY()));
+
+        for (int i = 0; i < hero.getInventory().length; i++) {
+
+            Item item = hero.getItem(i);
+
+            if (item == null) {
+
+                data.add("EMPTY");
+
+            } else {
+
+                data.add(item.getName());
+
+            }
+
+        }
 
         try {
 
