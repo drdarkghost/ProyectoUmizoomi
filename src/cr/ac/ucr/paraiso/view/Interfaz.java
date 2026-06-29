@@ -80,7 +80,7 @@ public class Interfaz extends JFrame {
         JPanel center = new JPanel(new BorderLayout());
 
         // Panel donde se dibuja el mapa
-        mapPanel = new JPanel(new GridLayout(9, 9));
+        mapPanel = new JPanel(new GridLayout(12, 12));
         mapPanel.setBackground(new Color(70, 120, 70));
         mapPanel.setBorder(BorderFactory.createTitledBorder("Mapa"));
 

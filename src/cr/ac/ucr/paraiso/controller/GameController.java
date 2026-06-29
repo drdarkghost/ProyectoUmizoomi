@@ -1,31 +1,62 @@
 package cr.ac.ucr.paraiso.controller;
 
 import cr.ac.ucr.paraiso.model.*;
-import cr.ac.ucr.paraiso.persistence.SaveManager;
 import cr.ac.ucr.paraiso.persistence.LoadManager;
+import cr.ac.ucr.paraiso.persistence.SaveManager;
 
 public class GameController {
 
     private Map gameMap;
     private Hero hero;
+
     private boolean nextChestPotion;
+
     private SaveManager saveManager;
     private LoadManager loadManager;
 
     public GameController(Hero hero) {
 
         this.hero = hero;
+
         gameMap = new Map();
+
         nextChestPotion = true;
+
         saveManager = new SaveManager();
         loadManager = new LoadManager();
 
     }
 
-    public Cell[][] getMap() {return gameMap.getMap();}
+    public Cell[][] getMap() {
+
+        return gameMap.getMap();
+
+    }
 
     public Hero getHero() {
+
         return hero;
+
+    }
+
+    public void saveGame() {
+
+        saveManager.saveGame(hero);
+
+    }
+
+    public void loadGame() {
+
+        Hero loadedHero = loadManager.loadGame();
+
+        if (loadedHero != null) {
+
+            hero = loadedHero;
+
+            gameMap.placeHero(hero);
+
+        }
+
     }
 
     private String fight(Enemy enemy) {
@@ -35,23 +66,27 @@ public class GameController {
             hero.attack(enemy);
 
             if (enemy.isAlive()) {
+
                 enemy.attack(hero);
+
             }
 
         }
 
-        if (hero.isAlive()) {
+        if (!hero.isAlive()) {
 
-            hero.setGold(
-                    hero.getGold()
-                            + enemy.getGoldReward());
+            return "Game Over.";
 
-            return "You defeated a "
-                    + enemy.getMonsterType()
-                    + "!";
         }
 
-        return "Game Over";
+        hero.setGold(
+                hero.getGold()
+                        + enemy.getGoldReward());
+
+        return "You defeated "
+                + enemy.getMonsterType()
+                + ".";
+
     }
 
     private String checkEnemy(int row, int col) {
@@ -59,7 +94,9 @@ public class GameController {
         Enemy enemy = gameMap.getEnemy(row, col);
 
         if (enemy == null) {
-            return ".";
+
+            return "There is no enemy.";
+
         }
 
         String result = fight(enemy);
@@ -68,7 +105,7 @@ public class GameController {
 
             gameMap.removeEnemy(row, col);
 
-            gameMap.setCell(row, col, 'H');
+            gameMap.moveHero(hero, row, col);
 
         }
 
@@ -81,20 +118,22 @@ public class GameController {
         Item item = gameMap.getItem(row, col);
 
         if (item == null) {
-            return ".";
-        }
 
-        if (hero.addItem(item)) {
-
-            gameMap.removeItem(row, col);
-
-            gameMap.setCell(row, col, 'H');
-
-            return item.getName() + " added to inventory.";
+            return "There is no item.";
 
         }
 
-        return "Inventory Full.";
+        if (!hero.addItem(item)) {
+
+            return "Inventory Full.";
+
+        }
+
+        gameMap.removeItem(row, col);
+
+        gameMap.moveHero(hero, row, col);
+
+        return item.getName() + " added to inventory.";
 
     }
 
@@ -124,15 +163,17 @@ public class GameController {
 
         nextChestPotion = !nextChestPotion;
 
-        if (hero.addItem(reward)) {
+        if (!hero.addItem(reward)) {
 
-            gameMap.setCell(row, col, 'H');
-
-            return reward.getName() + " added to inventory.";
+            return "Inventory Full.";
 
         }
 
-        return "Inventory Full.";
+        gameMap.clearCell(row, col);
+
+        gameMap.moveHero(hero, row, col);
+
+        return reward.getName() + " added to inventory.";
 
     }
 
@@ -140,7 +181,9 @@ public class GameController {
 
         hero.setHasKey(true);
 
-        gameMap.setCell(row, col, 'H');
+        gameMap.clearCell(row, col);
+
+        gameMap.moveHero(hero, row, col);
 
         return "You found the key!";
 
@@ -148,87 +191,59 @@ public class GameController {
 
     private String checkDoor(int row, int col) {
 
-        if (hero.hasKey()) {
+        if (!hero.hasKey()) {
 
-            gameMap.setCell(hero.getPosX(), hero.getPosY(), '.');
-
-            hero.setPosX(row);
-            hero.setPosY(col);
-
-            gameMap.setCell(row, col, 'H');
-
-            return "Congratulations! You escaped the dungeon!";
+            return "The door is locked. Find the key first.";
 
         }
 
-        return "The door is locked. Find the key first.";
+        gameMap.moveHero(hero, row, col);
+
+        return "Congratulations! You escaped the dungeon!";
 
     }
 
     public String moveHero(int newRow, int newCol) {
 
-        if (newRow < 0 || newRow >= 9 || newCol < 0 || newCol >= 9) {
+        if (newRow < 0 || newRow >= 12 || newCol < 0 || newCol >= 12) {
+
             return "You cannot leave the map.";
+
+        }
+
+        if (!gameMap.isWalkable(newRow, newCol)) {
+
+            return "You cannot move there.";
+
         }
 
         char destination = gameMap.getCell(newRow, newCol);
 
-        if (destination == 'W') {
-            return "You cannot move there.";
-        }
+        switch (destination) {
 
-        gameMap.moveHero(hero, newRow, newCol);
+            case 'E':
+                return checkEnemy(newRow, newCol);
 
-        if (destination == 'E') {
+            case 'I':
+                return checkItem(newRow, newCol);
 
-            return checkEnemy(newRow, newCol);
+            case 'C':
+                return checkChest(newRow, newCol);
 
-        }
+            case 'K':
+                return checkKey(newRow, newCol);
 
-        if (destination == 'I') {
+            case 'D':
+                return checkDoor(newRow, newCol);
 
-            return checkItem(newRow, newCol);
+            default:
 
-        }
+                gameMap.moveHero(hero, newRow, newCol);
 
-        if (destination == 'C') {
-
-            return checkChest(newRow, newCol);
-
-        }
-
-        if (destination == 'K') {
-
-            return checkKey(newRow, newCol);
-
-        }
-
-        if (destination == 'D') {
-
-            return checkDoor(newRow, newCol);
-
-        }
-
-        return "Hero moved.";
-    }
-
-    public void saveGame() {
-
-        saveManager.saveGame(hero);
-
-    }
-
-    public void loadGame() {
-
-        Hero loadedHero = loadManager.loadGame();
-
-        if (loadedHero != null) {
-
-            hero = loadedHero;
-
-            gameMap.placeHero(hero);
+                return "Hero moved.";
 
         }
 
     }
+
 }

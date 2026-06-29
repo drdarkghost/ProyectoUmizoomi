@@ -6,7 +6,7 @@ public class Map {
 
     public Map() {
 
-        map = new Cell[9][9];
+        map = new Cell[12][12];
 
         initializeMap();
 
@@ -30,10 +30,49 @@ public class Map {
         map[2][4].setEnemy(
                 new Enemy(
                         "Slime",
-                        30,
-                        5,
+                        40,
+                        8,
                         2,
                         4,
+                        15,
+                        "Slime"
+                )
+        );
+
+        map[6][5].setSymbol('E');
+        map[6][5].setEnemy(
+                new Enemy(
+                        "Slime",
+                        40,
+                        8,
+                        6,
+                        5,
+                        15,
+                        "Slime"
+                )
+        );
+
+        map[9][2].setSymbol('E');
+        map[9][2].setEnemy(
+                new Enemy(
+                        "Slime",
+                        40,
+                        8,
+                        9,
+                        2,
+                        15,
+                        "Slime"
+                )
+        );
+
+        map[3][9].setSymbol('E');
+        map[3][9].setEnemy(
+                new Enemy(
+                        "Slime",
+                        40,
+                        8,
+                        3,
+                        9,
                         15,
                         "Slime"
                 )
@@ -43,11 +82,24 @@ public class Map {
         map[4][8].setEnemy(
                 new Enemy(
                         "Giga Slime",
-                        70,
-                        12,
+                        80,
+                        15,
                         4,
+                        1,
+                        40,
+                        "Giga Slime"
+                )
+        );
+
+        map[8][6].setSymbol('E');
+        map[8][6].setEnemy(
+                new Enemy(
+                        "Giga Slime",
+                        80,
+                        15,
                         8,
-                        35,
+                        6,
+                        40,
                         "Giga Slime"
                 )
         );
@@ -56,18 +108,32 @@ public class Map {
         map[8][6].setEnemy(
                 new Enemy(
                         "King Slime",
-                        150,
-                        20,
+                        180,
+                        22,
+                        10,
                         8,
-                        6,
-                        75,
+                        100,
                         "King Slime"
                 )
         );
 
         map[8][8].setSymbol('C');
+        map[1][7].setSymbol('C');
+        map[10][3].setSymbol('C');
 
-        map[7][2].setSymbol('K');
+        map[8][2].setSymbol('K');
+
+        map[4][5].setSymbol('I');
+        map[4][5].setItem(
+
+                new Item(
+                        "Attack Weapon",
+                        "Increase attack by 10",
+                        "ATTACK_WEAPON",
+                        10
+                )
+
+        );
 
         map[0][3].setSymbol('I');
         map[0][3].setItem(
@@ -80,10 +146,39 @@ public class Map {
                 )
         );
 
+        map[5][5].setSymbol('I');
+        map[5][5].setItem(
+
+                new Item(
+                        "Attack Weapon",
+                        "Increase attack by 10",
+                        "ATTACK_WEAPON",
+                        10
+                )
+        );
+
         map[6][7].setSymbol('W');
         map[6][7].setWalkable(false);
 
-        map[8][0].setSymbol('D');
+        map[3][3].setSymbol('W');
+        map[3][3].setWalkable(false);
+
+        map[5][2].setSymbol('W');
+        map[5][2].setWalkable(false);
+
+        map[1][3].setSymbol('W');
+        map[1][3].setWalkable(false);
+
+        map[4][8].setSymbol('W');
+        map[4][8].setWalkable(false);
+
+        map[6][3].setSymbol('W');
+        map[6][3].setWalkable(false);
+
+        map[9][4].setSymbol('W');
+        map[9][4].setWalkable(false);
+
+        map[11][0].setSymbol('D');
 
     }
 

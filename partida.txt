@@ -1,0 +1,16 @@
+=== HERO ===
+Gab
+Warrior
+100
+20
+0
+false
+7
+8
+
+=== INVENTORY ===
+Health Potion
+Health Potion
+EMPTY
+EMPTY
+EMPTY

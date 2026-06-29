@@ -20,7 +20,7 @@ public class Hero extends Character {
 
             setMaxHealth(150);
             setCurrentHealth(150);
-            setAttackPower(10);
+            setAttackPower(12);
 
         } else if (heroClass.equalsIgnoreCase("Assassin")) {
 
