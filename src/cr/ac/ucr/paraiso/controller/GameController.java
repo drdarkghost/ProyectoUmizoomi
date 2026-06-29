@@ -1,18 +1,24 @@
 package cr.ac.ucr.paraiso.controller;
 
 import cr.ac.ucr.paraiso.model.*;
+import cr.ac.ucr.paraiso.persistence.SaveManager;
+import cr.ac.ucr.paraiso.persistence.LoadManager;
 
 public class GameController {
 
     private Map gameMap;
     private Hero hero;
     private boolean nextChestPotion;
+    private SaveManager saveManager;
+    private LoadManager loadManager;
 
     public GameController(Hero hero) {
 
         this.hero = hero;
         gameMap = new Map();
         nextChestPotion = true;
+        saveManager = new SaveManager();
+        loadManager = new LoadManager();
 
     }
 
@@ -53,7 +59,7 @@ public class GameController {
         Enemy enemy = gameMap.getEnemy(row, col);
 
         if (enemy == null) {
-            return "";
+            return ".";
         }
 
         String result = fight(enemy);
@@ -75,7 +81,7 @@ public class GameController {
         Item item = gameMap.getItem(row, col);
 
         if (item == null) {
-            return "";
+            return ".";
         }
 
         if (hero.addItem(item)) {
@@ -162,21 +168,16 @@ public class GameController {
     public String moveHero(int newRow, int newCol) {
 
         if (newRow < 0 || newRow >= 9 || newCol < 0 || newCol >= 9) {
-            return "No puedes salir de los limites del mapa";
+            return "You cannot leave the map.";
         }
 
         char destination = gameMap.getCell(newRow, newCol);
 
         if (destination == 'W') {
-            return "No puedes avanzar aqui, hay una pared";
+            return "You cannot move there.";
         }
 
-        gameMap.setCell(hero.getPosX(), hero.getPosY(), ' ');
-
-        hero.setPosX(newRow);
-        hero.setPosY(newCol);
-
-        gameMap.setCell(newRow, newCol, 'H');
+        gameMap.moveHero(hero, newRow, newCol);
 
         if (destination == 'E') {
 
@@ -208,6 +209,26 @@ public class GameController {
 
         }
 
-        return "El heroe se ha movido";
+        return "Hero moved.";
+    }
+
+    public void saveGame() {
+
+        saveManager.saveGame(hero);
+
+    }
+
+    public void loadGame() {
+
+        Hero loadedHero = loadManager.loadGame();
+
+        if (loadedHero != null) {
+
+            hero = loadedHero;
+
+            gameMap.placeHero(hero);
+
+        }
+
     }
 }

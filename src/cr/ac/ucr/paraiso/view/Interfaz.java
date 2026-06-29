@@ -1,6 +1,9 @@
 package cr.ac.ucr.paraiso.view;
 
 import cr.ac.ucr.paraiso.controller.GameController;
+import cr.ac.ucr.paraiso.model.Cell;
+import cr.ac.ucr.paraiso.model.Hero;
+import cr.ac.ucr.paraiso.model.Item;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,9 +21,18 @@ public class Interfaz extends JFrame {
     // Área de texto donde se mostrarán los mensajes del juego
     private JTextArea messagesArea;
 
+    // Para modificar el área de texto donde se mostrarán
+    private JLabel nameLabel;
+    private JLabel classLabel;
+    private JLabel healthLabel;
+    private JLabel attackLabel;
+    private JLabel goldLabel;
+    private JLabel keyLabel;
+    private JTextArea inventoryArea;
+
     // Constructor de la interfaz.
     // Inicializa la ventana y crea todos los componentes gráficos.
-    public Interfaz() {
+    public Interfaz(GameController controller) {
 
         // Configuración de la ventana principal
         setTitle("Proyecto Umizoomi");
@@ -29,8 +41,8 @@ public class Interfaz extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Se crea el controlador del juego
-        controller = new GameController();
+        // Utiliza el controlador para respetar MVC
+        this.controller = controller;
 
         // Se construyen las diferentes secciones de la interfaz
         createTitle();
@@ -72,34 +84,62 @@ public class Interfaz extends JFrame {
         mapPanel.setBackground(new Color(70, 120, 70));
         mapPanel.setBorder(BorderFactory.createTitledBorder("Mapa"));
 
-        // Dibuja el estado inicial del mapa
         drawMap();
 
-        // Panel lateral con la información del héroe
+        // Panel con la información del héroe
         JPanel infoPanel = new JPanel();
 
         infoPanel.setPreferredSize(new Dimension(300, 700));
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBorder(BorderFactory.createTitledBorder("Información"));
 
-        // Muestra los datos principales del héroe
-        infoPanel.add(new JLabel("Nombre: " + controller.getHero().getName()));
+        JLabel heroTitle = new JLabel("HERO STATUS");
+        heroTitle.setFont(new Font("Arial", Font.BOLD, 22));
+        heroTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        infoPanel.add(heroTitle);
+        infoPanel.add(Box.createVerticalStrut(25));
+
+        nameLabel = new JLabel();
+        classLabel = new JLabel();
+        healthLabel = new JLabel();
+        attackLabel = new JLabel();
+        goldLabel = new JLabel();
+        keyLabel = new JLabel();
+
+        infoPanel.add(nameLabel);
+        infoPanel.add(Box.createVerticalStrut(15));
+
+        infoPanel.add(classLabel);
+        infoPanel.add(Box.createVerticalStrut(15));
+
+        infoPanel.add(healthLabel);
+        infoPanel.add(Box.createVerticalStrut(15));
+
+        infoPanel.add(attackLabel);
+        infoPanel.add(Box.createVerticalStrut(15));
+
+        infoPanel.add(goldLabel);
+        infoPanel.add(Box.createVerticalStrut(15));
+
+        infoPanel.add(keyLabel);
         infoPanel.add(Box.createVerticalStrut(20));
 
-        infoPanel.add(new JLabel("Vida: " + controller.getHero().getCurrentHealth()));
-        infoPanel.add(Box.createVerticalStrut(20));
+        infoPanel.add(new JLabel("Inventory"));
 
-        infoPanel.add(new JLabel("Oro: " + controller.getHero().getGold()));
-        infoPanel.add(Box.createVerticalStrut(20));
+        inventoryArea = new JTextArea(6, 15);
+        inventoryArea.setEditable(false);
 
-        infoPanel.add(new JLabel("Inventario:"));
-        infoPanel.add(Box.createVerticalStrut(20));
+        JScrollPane inventoryScroll = new JScrollPane(inventoryArea);
 
-        // Agrega el mapa y la información al panel central
+        infoPanel.add(inventoryScroll);
+
         center.add(mapPanel, BorderLayout.CENTER);
         center.add(infoPanel, BorderLayout.EAST);
 
         add(center, BorderLayout.CENTER);
+
+        updateHeroInfo();
     }
 
     // Crea el área de mensajes ubicada en la parte inferior de la ventana.
@@ -110,7 +150,7 @@ public class Interfaz extends JFrame {
         // Evita que el usuario pueda escribir en esta área
         messagesArea.setEditable(false);
 
-        messagesArea.setText("Los mensajes del juego aparecerán aquí...");
+        messagesArea.setText("=== Game Log ===\n");
 
         JScrollPane scroll = new JScrollPane(messagesArea);
         scroll.setPreferredSize(new Dimension(1200, 120));
@@ -125,7 +165,7 @@ public class Interfaz extends JFrame {
         mapPanel.removeAll();
 
         // Obtiene la matriz del mapa desde el controlador
-        char[][] map = controller.getMap();
+        Cell[][] map = controller.getMap();
 
         // Recorre todas las filas y columnas del mapa
         for (int row = 0; row < map.length; row++) {
@@ -134,8 +174,7 @@ public class Interfaz extends JFrame {
 
                 // Crea una etiqueta para representar una casilla
                 JLabel cell = new JLabel(
-                        String.valueOf(map[row][col]),
-                        SwingConstants.CENTER);
+                        String.valueOf(map[row][col].getSymbol()), SwingConstants.CENTER);
 
                 // Configuración visual de cada casilla
                 cell.setFont(new Font("Arial", Font.BOLD, 24));
@@ -153,6 +192,60 @@ public class Interfaz extends JFrame {
         mapPanel.repaint();
     }
 
+    //Modificar los datos del Heroe
+    private void updateHeroInfo() {
+
+        Hero hero = controller.getHero();
+
+        nameLabel.setText("Name: " + hero.getName());
+
+        classLabel.setText("Class: " + hero.getHeroClass());
+
+        healthLabel.setText(
+                "Health: "
+                        + hero.getCurrentHealth()
+                        + " / "
+                        + hero.getMaxHealth());
+
+        attackLabel.setText(
+                "Attack: "
+                        + hero.getAttackPower());
+
+        goldLabel.setText(
+                "Gold: "
+                        + hero.getGold());
+
+        keyLabel.setText(
+                "Key: "
+                        + (hero.hasKey() ? "Yes" : "No"));
+
+        String inventoryText = "";
+
+        for (int i = 0; i < hero.getInventory().length; i++) {
+
+            Item item = hero.getItem(i);
+
+            if (item != null) {
+
+                inventoryText += (i + 1)
+                        + ". "
+                        + item.getName()
+                        + "\n";
+
+            }
+
+        }
+
+        if (inventoryText.isEmpty()) {
+
+            inventoryText = "Empty";
+
+        }
+
+        inventoryArea.setText(inventoryText);
+
+    }
+
     // Configura los controles del teclado para mover al héroe.
     private void createKeyControls() {
 
@@ -161,43 +254,113 @@ public class Interfaz extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
 
-                // Obtiene la posición actual del héroe
                 int row = controller.getHero().getPosX();
                 int col = controller.getHero().getPosY();
 
                 String message = "";
 
-                // Movimiento hacia arriba (W)
-                if (e.getKeyCode() == KeyEvent.VK_W) {
+                switch (e.getKeyCode()) {
 
-                    message = controller.moveHero(row - 1, col);
+                    case KeyEvent.VK_W: message = controller.moveHero(row - 1, col);
+                        break;
 
+                    case KeyEvent.VK_S: message = controller.moveHero(row + 1, col);
+                        break;
+
+                    case KeyEvent.VK_A: message = controller.moveHero(row, col - 1);
+                        break;
+
+                    case KeyEvent.VK_D: message = controller.moveHero(row, col + 1);
+                        break;
+
+                    case KeyEvent.VK_1:
+
+                        if (controller.getHero().useItem(0)) {
+                            message = "Item 1 used.";
+
+                        } else {
+                            message = "There is no item in slot 1.";
+
+                        }
+                        break;
+
+                    case KeyEvent.VK_2:
+
+                        if (controller.getHero().useItem(1)) {
+                            message = "Item 2 used.";
+
+                        } else {
+                            message = "There is no item in slot 2.";
+
+                        }
+                        break;
+
+                    case KeyEvent.VK_3:
+
+                        if (controller.getHero().useItem(2)) {
+                            message = "Item 3 used.";
+
+                        } else {
+                            message = "There is no item in slot 3.";
+
+                        }
+                        break;
+
+                    case KeyEvent.VK_4:
+
+                        if (controller.getHero().useItem(3)) {
+                            message = "Item 4 used.";
+
+                        } else {
+                            message = "There is no item in slot 4.";
+
+                        }
+                        break;
+
+                    case KeyEvent.VK_5:
+
+                        if (controller.getHero().useItem(4)) {
+                            message = "Item 5 used.";
+
+                        } else {
+                            message = "There is no item in slot 5.";
+
+                        }
+                        break;
+
+                    case KeyEvent.VK_F5:
+
+                        controller.saveGame();
+
+                        message = "Game Saved.";
+
+                        break;
+
+                    case KeyEvent.VK_F9:
+
+                        controller.loadGame();
+
+                        message = "Game Loaded.";
+
+                        break;
                 }
-                // Movimiento hacia abajo (S)
-                else if (e.getKeyCode() == KeyEvent.VK_S) {
 
-                    message = controller.moveHero(row + 1, col);
-
-                }
-                // Movimiento hacia la izquierda (A)
-                else if (e.getKeyCode() == KeyEvent.VK_A) {
-
-                    message = controller.moveHero(row, col - 1);
-
-                }
-                // Movimiento hacia la derecha (D)
-                else if (e.getKeyCode() == KeyEvent.VK_D) {
-
-                    message = controller.moveHero(row, col + 1);
-
-                }
-
-                // Redibuja el mapa para mostrar la nueva posición del héroe
                 drawMap();
 
-                // Muestra en pantalla el resultado del movimiento realizado
-                messagesArea.setText(message);
+                updateHeroInfo();
+
+                messagesArea.append(message + "\n");
+                messagesArea.setCaretPosition(messagesArea.getDocument().getLength());
+
+                if (message.contains("Congratulations")
+                        || message.contains("Game Over")) {
+
+                    removeKeyListener(getKeyListeners()[0]);
+
+                }
             }
         });
+
     }
+
 }

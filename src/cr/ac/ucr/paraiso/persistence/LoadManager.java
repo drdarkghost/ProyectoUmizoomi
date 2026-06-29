@@ -14,40 +14,83 @@ public class LoadManager {
 
         try {
 
-            List<String> data = Files.readAllLines(Path.of("partida.txt"));
+            List<String> data =
+                    Files.readAllLines(Path.of("partida.txt"));
 
-            Hero hero = new Hero(data.get(0), data.get(1));
+            Hero hero = new Hero(
 
-            hero.setCurrentHealth(Integer.parseInt(data.get(2)));
-            hero.setAttackPower(Integer.parseInt(data.get(3)));
-            hero.setGold(Integer.parseInt(data.get(4)));
-            hero.setHasKey(Boolean.parseBoolean(data.get(5)));
-            hero.setPosX(Integer.parseInt(data.get(6)));
-            hero.setPosY(Integer.parseInt(data.get(7)));
+                    data.get(1),
+                    data.get(2)
+
+            );
+
+            hero.setCurrentHealth(
+
+                    Integer.parseInt(data.get(3))
+
+            );
+
+            hero.setAttackPower(
+
+                    Integer.parseInt(data.get(4))
+
+            );
+
+            hero.setGold(
+
+                    Integer.parseInt(data.get(5))
+
+            );
+
+            hero.setHasKey(
+
+                    Boolean.parseBoolean(data.get(6))
+
+            );
+
+            hero.setPosX(
+
+                    Integer.parseInt(data.get(7))
+
+            );
+
+            hero.setPosY(
+
+                    Integer.parseInt(data.get(8))
+
+            );
 
             for (int i = 0; i < 5; i++) {
 
-                String itemName = data.get(8 + i);
+                String itemName = data.get(11 + i);
 
                 if (!itemName.equals("EMPTY")) {
 
                     if (itemName.equals("Health Potion")) {
 
-                        hero.setItem(i,
+                        hero.setItem(
+                                i,
                                 new Item(
                                         "Health Potion",
                                         "Restores 25 HP",
                                         "HEALTH_POTION",
-                                        25));
+                                        25
+                                )
+                        );
 
-                    } else if (itemName.equals("Attack Weapon")) {
+                    }
 
-                        hero.setItem(i,
+                    else if (itemName.equals("Attack Weapon")) {
+
+                        hero.setItem(
+                                i,
                                 new Item(
                                         "Attack Weapon",
                                         "Increase attack by 10",
                                         "ATTACK_WEAPON",
-                                        10));
+                                        10
+                                )
+                        );
 
                     }
 

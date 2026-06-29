@@ -87,6 +87,57 @@ public class Map {
 
     }
 
+    public void clearCell(int row, int col) {
+
+        map[row][col].setEnemy(null);
+        map[row][col].setItem(null);
+        map[row][col].setSymbol('.');
+
+    }
+
+    public boolean isEmpty(int row, int col) {
+
+        return map[row][col].getSymbol() == '.';
+
+    }
+
+    public void placeHero(Hero hero) {
+
+        for (int row = 0; row < map.length; row++) {
+
+            for (int col = 0; col < map[row].length; col++) {
+
+                if (map[row][col].getSymbol() == 'H') {
+
+                    map[row][col].setSymbol('.');
+
+                }
+
+            }
+
+        }
+
+        map[hero.getPosX()][hero.getPosY()].setSymbol('H');
+
+    }
+
+    public boolean hasSymbol(int row, int col, char symbol) {
+
+        return map[row][col].getSymbol() == symbol;
+
+    }
+
+    public void moveHero(Hero hero, int newRow, int newCol) {
+
+        map[hero.getPosX()][hero.getPosY()].setSymbol('.');
+
+        hero.setPosX(newRow);
+        hero.setPosY(newCol);
+
+        map[newRow][newCol].setSymbol('H');
+
+    }
+
     public Cell[][] getMap() {
         return map;
     }
@@ -123,37 +174,14 @@ public class Map {
 
     public void removeEnemy(int row, int col) {
 
-        map[row][col].setEnemy(null);
-
-        map[row][col].setSymbol('.');
+        clearCell(row, col);
 
     }
 
     public void removeItem(int row, int col) {
 
-        map[row][col].setItem(null);
-
-        map[row][col].setSymbol('.');
+        clearCell(row, col);
 
     }
 
-    public void placeHero(Hero hero) {
-
-        for (int row = 0; row < map.length; row++) {
-
-            for (int col = 0; col < map[row].length; col++) {
-
-                if (map[row][col].getSymbol() == 'H') {
-
-                    map[row][col].setSymbol('.');
-
-                }
-
-            }
-
-        }
-
-        map[hero.getPosX()][hero.getPosY()].setSymbol('H');
-
-    }
 }

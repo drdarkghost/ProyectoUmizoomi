@@ -15,6 +15,7 @@ public class SaveManager {
 
         List<String> data = new ArrayList<>();
 
+        data.add("=== HERO ===");
         data.add(hero.getName());
         data.add(hero.getHeroClass());
         data.add(String.valueOf(hero.getCurrentHealth()));
@@ -23,6 +24,10 @@ public class SaveManager {
         data.add(String.valueOf(hero.hasKey()));
         data.add(String.valueOf(hero.getPosX()));
         data.add(String.valueOf(hero.getPosY()));
+
+        data.add("");
+
+        data.add("=== INVENTORY ===");
 
         for (int i = 0; i < hero.getInventory().length; i++) {
 
