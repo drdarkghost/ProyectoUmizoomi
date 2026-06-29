@@ -26,12 +26,12 @@ public class Item {
             }
 
             hero.setCurrentHealth(newHealth);
-        }
 
-        if (itemType.equals("ATTACK_WEAPON")) {
+        } else if (itemType.equals("ATTACK_WEAPON")) {
 
             hero.setAttackPower(hero.getAttackPower() + effectValue);
         }
+
     }
 
     public String getName() {
@@ -49,4 +49,12 @@ public class Item {
     public int getEffectValue() {
         return effectValue;
     }
+
+    public void setName(String name) {this.name = name;}
+
+    public void setDescription(String description) {this.description = description;}
+
+    public void setItemType(String itemType) {this.itemType = itemType;}
+
+    public void setEffectValue(int effectValue) {this.effectValue = effectValue;}
 }
