@@ -29,9 +29,6 @@ public class Hero extends Character {
             setAttackPower(30);
         }
 
-        // Warrior utiliza los valores por defecto:
-        // Vida = 100
-        // Ataque = 20
     }
 
     public boolean addItem(Item item) {
@@ -42,20 +39,112 @@ public class Hero extends Character {
 
                 inventory[i] = item;
                 return true;
+
             }
+
         }
 
         return false;
+
     }
 
-    public String getHeroClass() {return heroClass;}
+    public boolean useItem(int index) {
 
-    public int getGold() {return gold;}
+        if (index < 0 || index >= inventory.length) {
+            return false;
+        }
 
-    public boolean hasKey() {return hasKey;}
+        if (inventory[index] == null) {
+            return false;
+        }
 
-    public Item[] getInventory() {return inventory;}
+        inventory[index].applyEffect(this);
 
-    public void setGold(int gold) {this.gold = gold;}
+        inventory[index] = null;
+
+        organizeInventory();
+
+        return true;
+
+    }
+
+    private void organizeInventory() {
+
+        Item[] newInventory = new Item[inventory.length];
+
+        int position = 0;
+
+        for (int i = 0; i < inventory.length; i++) {
+
+            if (inventory[i] != null) {
+
+                newInventory[position] = inventory[i];
+                position++;
+
+            }
+
+        }
+
+        inventory = newInventory;
+
+    }
+
+    public int getInventorySize() {
+
+        int count = 0;
+
+        for (Item item : inventory) {
+
+            if (item != null) {
+
+                count++;
+
+            }
+
+        }
+
+        return count;
+
+    }
+
+    public Item getItem(int index) {
+
+        if (index < 0 || index >= inventory.length) {
+
+            return null;
+
+        }
+
+        return inventory[index];
+
+    }
+
+    public String getHeroClass() {
+        return heroClass;
+    }
+
+    public int getGold() {
+        return gold;
+    }
+
+    public boolean hasKey() {
+        return hasKey;
+    }
+
+    public Item[] getInventory() {
+        return inventory;
+    }
+
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
+
+    public void setHasKey(boolean hasKey) {
+        this.hasKey = hasKey;
+    }
+
+    public void setHeroClass(String heroClass) {
+        this.heroClass = heroClass;
+    }
 
 }

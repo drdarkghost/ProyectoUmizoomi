@@ -1,24 +1,162 @@
 package cr.ac.ucr.paraiso.controller;
 
-import cr.ac.ucr.paraiso.model.Hero;
-import cr.ac.ucr.paraiso.model.Map;
+import cr.ac.ucr.paraiso.model.*;
 
 public class GameController {
 
     private Map gameMap;
     private Hero hero;
+    private boolean nextChestPotion;
 
-    public GameController() {
+    public GameController(Hero hero) {
+
+        this.hero = hero;
         gameMap = new Map();
-        hero = new Hero("Lechuguin", 100, 20, 0, 0, "caballero");
+        nextChestPotion = true;
+
     }
 
-    public char[][] getMap() {
-        return gameMap.getMap();
-    }
+    public Cell[][] getMap() {return gameMap.getMap();}
 
     public Hero getHero() {
         return hero;
+    }
+
+    private String fight(Enemy enemy) {
+
+        while (hero.isAlive() && enemy.isAlive()) {
+
+            hero.attack(enemy);
+
+            if (enemy.isAlive()) {
+                enemy.attack(hero);
+            }
+
+        }
+
+        if (hero.isAlive()) {
+
+            hero.setGold(
+                    hero.getGold()
+                            + enemy.getGoldReward());
+
+            return "You defeated a "
+                    + enemy.getMonsterType()
+                    + "!";
+        }
+
+        return "Game Over";
+    }
+
+    private String checkEnemy(int row, int col) {
+
+        Enemy enemy = gameMap.getEnemy(row, col);
+
+        if (enemy == null) {
+            return "";
+        }
+
+        String result = fight(enemy);
+
+        if (hero.isAlive()) {
+
+            gameMap.removeEnemy(row, col);
+
+            gameMap.setCell(row, col, 'H');
+
+        }
+
+        return result;
+
+    }
+
+    private String checkItem(int row, int col) {
+
+        Item item = gameMap.getItem(row, col);
+
+        if (item == null) {
+            return "";
+        }
+
+        if (hero.addItem(item)) {
+
+            gameMap.removeItem(row, col);
+
+            gameMap.setCell(row, col, 'H');
+
+            return item.getName() + " added to inventory.";
+
+        }
+
+        return "Inventory Full.";
+
+    }
+
+    private String checkChest(int row, int col) {
+
+        Item reward;
+
+        if (nextChestPotion) {
+
+            reward = new Item(
+                    "Health Potion",
+                    "Restores 25 HP",
+                    "HEALTH_POTION",
+                    25
+            );
+
+        } else {
+
+            reward = new Item(
+                    "Attack Weapon",
+                    "Increase attack by 10",
+                    "ATTACK_WEAPON",
+                    10
+            );
+
+        }
+
+        nextChestPotion = !nextChestPotion;
+
+        if (hero.addItem(reward)) {
+
+            gameMap.setCell(row, col, 'H');
+
+            return reward.getName() + " added to inventory.";
+
+        }
+
+        return "Inventory Full.";
+
+    }
+
+    private String checkKey(int row, int col) {
+
+        hero.setHasKey(true);
+
+        gameMap.setCell(row, col, 'H');
+
+        return "You found the key!";
+
+    }
+
+    private String checkDoor(int row, int col) {
+
+        if (hero.hasKey()) {
+
+            gameMap.setCell(hero.getPosX(), hero.getPosY(), '.');
+
+            hero.setPosX(row);
+            hero.setPosY(col);
+
+            gameMap.setCell(row, col, 'H');
+
+            return "Congratulations! You escaped the dungeon!";
+
+        }
+
+        return "The door is locked. Find the key first.";
+
     }
 
     public String moveHero(int newRow, int newCol) {
@@ -41,15 +179,33 @@ public class GameController {
         gameMap.setCell(newRow, newCol, 'H');
 
         if (destination == 'E') {
-            return "Encontraste un enemigo!!";
+
+            return checkEnemy(newRow, newCol);
+
         }
 
         if (destination == 'I') {
-            return "Encontraste un Item!!";
+
+            return checkItem(newRow, newCol);
+
         }
 
         if (destination == 'C') {
-            return "Encontraste un cofre!!";
+
+            return checkChest(newRow, newCol);
+
+        }
+
+        if (destination == 'K') {
+
+            return checkKey(newRow, newCol);
+
+        }
+
+        if (destination == 'D') {
+
+            return checkDoor(newRow, newCol);
+
         }
 
         return "El heroe se ha movido";
