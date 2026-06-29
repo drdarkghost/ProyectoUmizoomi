@@ -31,7 +31,9 @@ public class Character {
         return currentHealth > 0;
     }
 
-    public void takeDamage(int amount) {currentHealth -= amount;
+    public void takeDamage(int amount) {
+
+        currentHealth -= amount;
 
         if (currentHealth < 0) {
             currentHealth = 0;
@@ -70,7 +72,9 @@ public class Character {
         this.currentHealth = currentHealth;
     }
 
-    public void setAttackPower(int attackPower) {
-        this.attackPower = attackPower;
-    }
+    public void setName(String name) {this.name = name;}
+
+    public void setMaxHealth(int maxHealth) {this.maxHealth = maxHealth;}
+
+    public void setAttackPower(int attackPower) {this.attackPower = attackPower;}
 }
