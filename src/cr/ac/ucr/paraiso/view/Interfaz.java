@@ -259,90 +259,149 @@ public class Interfaz extends JFrame {
 
                 String message = "";
 
+                // Combat (SPACE)
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+
+                    message = controller.attackEnemy();
+
+                    drawMap();
+                    updateHeroInfo();
+
+                    messagesArea.append(message + "\n");
+                    messagesArea.setCaretPosition(
+                            messagesArea.getDocument().getLength());
+
+                    return;
+                }
+
+                if (e.getKeyCode() == KeyEvent.VK_1) {
+
+                    if (controller.getHero().useItem(0)) {
+
+                        message = "Item used.";
+
+                    } else {
+
+                        message = "No item in slot 1.";
+
+                    }
+
+                    updateHeroInfo();
+
+                    messagesArea.append(message + "\n");
+
+                    return;
+
+                }
+
+                if (e.getKeyCode() == KeyEvent.VK_2) {
+
+                    if (controller.getHero().useItem(1)) {
+
+                        message = "Item used.";
+
+                    } else {
+
+                        message = "No item in slot 2.";
+
+                    }
+
+                    updateHeroInfo();
+
+                    messagesArea.append(message + "\n");
+
+                    return;
+
+                }
+
+                if (e.getKeyCode() == KeyEvent.VK_3) {
+
+                    if (controller.getHero().useItem(2)) {
+
+                        message = "Item used.";
+
+                    } else {
+
+                        message = "No item in slot 3.";
+
+                    }
+
+                    updateHeroInfo();
+
+                    messagesArea.append(message + "\n");
+
+                    return;
+
+                }
+
+                if (e.getKeyCode() == KeyEvent.VK_4) {
+
+                    if (controller.getHero().useItem(3)) {
+
+                        message = "Item used.";
+
+                    } else {
+
+                        message = "No item in slot 4.";
+
+                    }
+
+                    updateHeroInfo();
+
+                    messagesArea.append(message + "\n");
+
+                    return;
+
+                }
+
+                if (e.getKeyCode() == KeyEvent.VK_5) {
+
+                    if (controller.getHero().useItem(4)) {
+
+                        message = "Item used.";
+
+                    } else {
+
+                        message = "No item in slot 5.";
+
+                    }
+
+                    updateHeroInfo();
+
+                    messagesArea.append(message + "\n");
+
+                    return;
+
+                }
+
                 switch (e.getKeyCode()) {
 
-                    case KeyEvent.VK_W: message = controller.moveHero(row - 1, col);
+                    case KeyEvent.VK_W:
+                        message = controller.moveHero(row - 1, col);
                         break;
 
-                    case KeyEvent.VK_S: message = controller.moveHero(row + 1, col);
+                    case KeyEvent.VK_S:
+                        message = controller.moveHero(row + 1, col);
                         break;
 
-                    case KeyEvent.VK_A: message = controller.moveHero(row, col - 1);
+                    case KeyEvent.VK_A:
+                        message = controller.moveHero(row, col - 1);
                         break;
 
-                    case KeyEvent.VK_D: message = controller.moveHero(row, col + 1);
-                        break;
-
-                    case KeyEvent.VK_1:
-
-                        if (controller.getHero().useItem(0)) {
-                            message = "Item 1 used.";
-
-                        } else {
-                            message = "There is no item in slot 1.";
-
-                        }
-                        break;
-
-                    case KeyEvent.VK_2:
-
-                        if (controller.getHero().useItem(1)) {
-                            message = "Item 2 used.";
-
-                        } else {
-                            message = "There is no item in slot 2.";
-
-                        }
-                        break;
-
-                    case KeyEvent.VK_3:
-
-                        if (controller.getHero().useItem(2)) {
-                            message = "Item 3 used.";
-
-                        } else {
-                            message = "There is no item in slot 3.";
-
-                        }
-                        break;
-
-                    case KeyEvent.VK_4:
-
-                        if (controller.getHero().useItem(3)) {
-                            message = "Item 4 used.";
-
-                        } else {
-                            message = "There is no item in slot 4.";
-
-                        }
-                        break;
-
-                    case KeyEvent.VK_5:
-
-                        if (controller.getHero().useItem(4)) {
-                            message = "Item 5 used.";
-
-                        } else {
-                            message = "There is no item in slot 5.";
-
-                        }
+                    case KeyEvent.VK_D:
+                        message = controller.moveHero(row, col + 1);
                         break;
 
                     case KeyEvent.VK_F5:
-
                         controller.saveGame();
-
                         message = "Game Saved.";
-
                         break;
 
                     case KeyEvent.VK_F9:
-
                         controller.loadGame();
-
                         message = "Game Loaded.";
-
                         break;
+
                 }
 
                 drawMap();
@@ -350,6 +409,7 @@ public class Interfaz extends JFrame {
                 updateHeroInfo();
 
                 messagesArea.append(message + "\n");
+
                 messagesArea.setCaretPosition(messagesArea.getDocument().getLength());
 
                 if (message.contains("Congratulations")

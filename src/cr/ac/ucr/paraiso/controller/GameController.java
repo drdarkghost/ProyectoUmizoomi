@@ -14,6 +14,13 @@ public class GameController {
     private SaveManager saveManager;
     private LoadManager loadManager;
 
+    private Enemy enemyInCombat;
+
+    private int enemyRow;
+    private int enemyCol;
+
+    private boolean combatActive;
+
     public GameController(Hero hero) {
 
         this.hero = hero;
@@ -24,6 +31,13 @@ public class GameController {
 
         saveManager = new SaveManager();
         loadManager = new LoadManager();
+
+        enemyInCombat = null;
+
+        enemyRow = -1;
+        enemyCol = -1;
+
+        combatActive = false;
 
     }
 
@@ -36,6 +50,72 @@ public class GameController {
     public Hero getHero() {
 
         return hero;
+
+    }
+
+    public boolean isCombatActive() {
+
+        return combatActive;
+
+    }
+
+    private void startCombat(int row, int col) {
+
+        enemyInCombat = gameMap.getEnemy(row, col);
+
+        enemyRow = row;
+        enemyCol = col;
+
+        combatActive = true;
+
+    }
+
+    public String attackEnemy() {
+
+        if (!combatActive) {
+
+            return "There is no enemy nearby.";
+
+        }
+
+        hero.attack(enemyInCombat);
+
+        if (!enemyInCombat.isAlive()) {
+
+            hero.setGold(
+
+                    hero.getGold()
+                            + enemyInCombat.getGoldReward()
+
+            );
+
+            gameMap.removeEnemy(enemyRow, enemyCol);
+
+            gameMap.moveHero(hero, enemyRow, enemyCol);
+
+            combatActive = false;
+
+            enemyInCombat = null;
+
+            return "You defeated the enemy!";
+
+        }
+
+        enemyInCombat.attack(hero);
+
+        if (!hero.isAlive()) {
+
+            combatActive = false;
+
+            return "Game Over.";
+
+        }
+
+        return enemyInCombat.getMonsterType()
+                + " HP: "
+                + enemyInCombat.getCurrentHealth()
+                + " | Hero HP: "
+                + hero.getCurrentHealth();
 
     }
 
@@ -91,25 +171,10 @@ public class GameController {
 
     private String checkEnemy(int row, int col) {
 
-        Enemy enemy = gameMap.getEnemy(row, col);
+        startCombat(row, col);
 
-        if (enemy == null) {
-
-            return "There is no enemy.";
-
-        }
-
-        String result = fight(enemy);
-
-        if (hero.isAlive()) {
-
-            gameMap.removeEnemy(row, col);
-
-            gameMap.moveHero(hero, row, col);
-
-        }
-
-        return result;
+        return gameMap.getEnemy(row, col).getMonsterType()
+                + " is in front of you.\nPress SPACE to attack.";
 
     }
 
@@ -205,6 +270,12 @@ public class GameController {
 
     public String moveHero(int newRow, int newCol) {
 
+        if (combatActive) {
+
+            return "You are in combat! Press SPACE to attack.";
+
+        }
+
         if (newRow < 0 || newRow >= 12 || newCol < 0 || newCol >= 12) {
 
             return "You cannot leave the map.";
@@ -222,18 +293,26 @@ public class GameController {
         switch (destination) {
 
             case 'E':
-                return checkEnemy(newRow, newCol);
+
+                startCombat(newRow, newCol);
+
+                return gameMap.getEnemy(newRow, newCol).getMonsterType()
+                        + " is in front of you.\nPress SPACE to attack.";
 
             case 'I':
+
                 return checkItem(newRow, newCol);
 
             case 'C':
+
                 return checkChest(newRow, newCol);
 
             case 'K':
+
                 return checkKey(newRow, newCol);
 
             case 'D':
+
                 return checkDoor(newRow, newCol);
 
             default:
