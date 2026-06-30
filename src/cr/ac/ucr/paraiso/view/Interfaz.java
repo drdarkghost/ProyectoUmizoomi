@@ -30,6 +30,8 @@ public class Interfaz extends JFrame {
     private JLabel keyLabel;
     private JTextArea inventoryArea;
 
+    private boolean gameFinished;
+
     // Constructor de la interfaz.
     // Inicializa la ventana y crea todos los componentes gráficos.
     public Interfaz(GameController controller) {
@@ -56,6 +58,8 @@ public class Interfaz extends JFrame {
         // Permite que la ventana detecte las teclas presionadas
         setFocusable(true);
         requestFocusInWindow();
+
+        gameFinished = false;
     }
 
     // Crea el título ubicado en la parte superior de la ventana.
@@ -153,7 +157,7 @@ public class Interfaz extends JFrame {
         messagesArea.setText("=== Game Log ===\n");
 
         JScrollPane scroll = new JScrollPane(messagesArea);
-        scroll.setPreferredSize(new Dimension(1200, 120));
+        scroll.setPreferredSize(new Dimension(1200, 190));
 
         add(scroll, BorderLayout.SOUTH);
     }
@@ -254,6 +258,28 @@ public class Interfaz extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
 
+                if (gameFinished) {
+
+                    if (e.getKeyCode() == KeyEvent.VK_F9) {
+
+                        controller.loadGame();
+
+                        drawMap();
+                        updateHeroInfo();
+
+                        messagesArea.append("Game Loaded.\n");
+
+                        messagesArea.setCaretPosition(
+                                messagesArea.getDocument().getLength());
+
+                        gameFinished = false;
+
+                    }
+
+                    return;
+
+                }
+
                 int row = controller.getHero().getPosX();
                 int col = controller.getHero().getPosY();
 
@@ -276,9 +302,23 @@ public class Interfaz extends JFrame {
 
                 if (e.getKeyCode() == KeyEvent.VK_1) {
 
-                    if (controller.getHero().useItem(0)) {
+                    Item item = controller.getHero().getItem(0);
 
-                        message = "Item used.";
+                    if (item != null) {
+
+                        String itemName = item.getName();
+
+                        controller.getHero().useItem(0);
+
+                        if (itemName.equals("Health Potion")) {
+
+                            message = "Health Potion used.\n+25 HP restored.";
+
+                        } else {
+
+                            message = "Attack Weapon equipped.\nAttack +10.";
+
+                        }
 
                     } else {
 
@@ -296,13 +336,27 @@ public class Interfaz extends JFrame {
 
                 if (e.getKeyCode() == KeyEvent.VK_2) {
 
-                    if (controller.getHero().useItem(1)) {
+                    Item item = controller.getHero().getItem(1);
 
-                        message = "Item used.";
+                    if (item != null) {
+
+                        String itemName = item.getName();
+
+                        controller.getHero().useItem(1);
+
+                        if (itemName.equals("Health Potion")) {
+
+                            message = "Health Potion used.\n+25 HP restored.";
+
+                        } else {
+
+                            message = "Attack Weapon equipped.\nAttack +10.";
+
+                        }
 
                     } else {
 
-                        message = "No item in slot 2.";
+                        message = "No item in slot 1.";
 
                     }
 
@@ -316,13 +370,27 @@ public class Interfaz extends JFrame {
 
                 if (e.getKeyCode() == KeyEvent.VK_3) {
 
-                    if (controller.getHero().useItem(2)) {
+                    Item item = controller.getHero().getItem(2);
 
-                        message = "Item used.";
+                    if (item != null) {
+
+                        String itemName = item.getName();
+
+                        controller.getHero().useItem(2);
+
+                        if (itemName.equals("Health Potion")) {
+
+                            message = "Health Potion used.\n+25 HP restored.";
+
+                        } else {
+
+                            message = "Attack Weapon equipped.\nAttack +10.";
+
+                        }
 
                     } else {
 
-                        message = "No item in slot 3.";
+                        message = "No item in slot 1.";
 
                     }
 
@@ -336,13 +404,27 @@ public class Interfaz extends JFrame {
 
                 if (e.getKeyCode() == KeyEvent.VK_4) {
 
-                    if (controller.getHero().useItem(3)) {
+                    Item item = controller.getHero().getItem(3);
 
-                        message = "Item used.";
+                    if (item != null) {
+
+                        String itemName = item.getName();
+
+                        controller.getHero().useItem(3);
+
+                        if (itemName.equals("Health Potion")) {
+
+                            message = "Health Potion used.\n+25 HP restored.";
+
+                        } else {
+
+                            message = "Attack Weapon equipped.\nAttack +10.";
+
+                        }
 
                     } else {
 
-                        message = "No item in slot 4.";
+                        message = "No item in slot 1.";
 
                     }
 
@@ -356,13 +438,27 @@ public class Interfaz extends JFrame {
 
                 if (e.getKeyCode() == KeyEvent.VK_5) {
 
-                    if (controller.getHero().useItem(4)) {
+                    Item item = controller.getHero().getItem(4);
 
-                        message = "Item used.";
+                    if (item != null) {
+
+                        String itemName = item.getName();
+
+                        controller.getHero().useItem(4);
+
+                        if (itemName.equals("Health Potion")) {
+
+                            message = "Health Potion used.\n+25 HP restored.";
+
+                        } else {
+
+                            message = "Attack Weapon equipped.\nAttack +10.";
+
+                        }
 
                     } else {
 
-                        message = "No item in slot 5.";
+                        message = "No item in slot 1.";
 
                     }
 
@@ -394,12 +490,12 @@ public class Interfaz extends JFrame {
 
                     case KeyEvent.VK_F5:
                         controller.saveGame();
-                        message = "Game Saved.";
+                        message = "\n"+ "Game Saved."+ "\n";
                         break;
 
                     case KeyEvent.VK_F9:
                         controller.loadGame();
-                        message = "Game Loaded.";
+                        message = "\n"+ "Game Loaded."+ "\n";
                         break;
 
                 }
@@ -412,10 +508,15 @@ public class Interfaz extends JFrame {
 
                 messagesArea.setCaretPosition(messagesArea.getDocument().getLength());
 
-                if (message.contains("Congratulations")
-                        || message.contains("Game Over")) {
+                if (message.contains("VICTORY")) {
 
-                    removeKeyListener(getKeyListeners()[0]);
+                    gameFinished = true;
+
+                }
+
+                if (message.contains("Game Over")) {
+
+                    gameFinished = true;
 
                 }
             }

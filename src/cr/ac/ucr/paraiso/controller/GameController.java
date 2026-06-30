@@ -78,16 +78,18 @@ public class GameController {
 
         }
 
+        String message = "";
+
         hero.attack(enemyInCombat);
+
+        message += "You attacked " + enemyInCombat.getMonsterType() + ".\n";
+
+        message += "Enemy HP: " + enemyInCombat.getCurrentHealth() + "/"
+                + enemyInCombat.getMaxHealth() + "\n";
 
         if (!enemyInCombat.isAlive()) {
 
-            hero.setGold(
-
-                    hero.getGold()
-                            + enemyInCombat.getGoldReward()
-
-            );
+            hero.setGold(hero.getGold() + enemyInCombat.getGoldReward());
 
             gameMap.removeEnemy(enemyRow, enemyCol);
 
@@ -97,25 +99,38 @@ public class GameController {
 
             enemyInCombat = null;
 
-            return "You defeated the enemy!";
+            message += "You defeated the enemy!\n";
+
+            return message;
 
         }
 
         enemyInCombat.attack(hero);
 
+        message += enemyInCombat.getMonsterType() + " attacked you.\n";
+
+        message += "Hero HP: " + hero.getCurrentHealth() + "/" + hero.getMaxHealth();
+
         if (!hero.isAlive()) {
 
             combatActive = false;
 
-            return "Game Over.";
+            enemyInCombat = null;
+
+            message += "\n====================================\n"
+                    + "  GAME OVER\n\n"
+                    + "Your hero has fallen.\n"
+                    + "Gold collected: " + hero.getGold() + "\n"
+                    + "Class: " + hero.getHeroClass() + "\n\n"
+                    + "Better luck next time " + hero.getName() + "!" + "\n\n"
+                    + "Press F9 to load a saved game."+ "\n"
+                    + "====================================";
+
+            return message;
 
         }
 
-        return enemyInCombat.getMonsterType()
-                + " HP: "
-                + enemyInCombat.getCurrentHealth()
-                + " | Hero HP: "
-                + hero.getCurrentHealth();
+        return message;
 
     }
 
@@ -173,8 +188,13 @@ public class GameController {
 
         startCombat(row, col);
 
-        return gameMap.getEnemy(row, col).getMonsterType()
-                + " is in front of you.\nPress SPACE to attack.";
+        Enemy enemy = gameMap.getEnemy(row, col);
+
+        return "========== COMBAT ==========\n\n"
+                + "Enemy: " + enemy.getMonsterType()
+                + "\nHealth: " + enemy.getCurrentHealth()
+                + "\nAttack: " + enemy.getAttackPower()
+                + "\n\nPress SPACE to attack.";
 
     }
 
@@ -264,11 +284,24 @@ public class GameController {
 
         gameMap.moveHero(hero, row, col);
 
-        return "Congratulations! You escaped the dungeon!";
+        return "====================================\n"
+                + "  VICTORY!\n\n"
+                + "You escaped the dungeon!\n"
+                + "Gold collected: " + hero.getGold() + "\n"
+                + "Class: " + hero.getHeroClass() + "\n\n"
+                + "Thanks for playing " + hero.getName() + "!" + "\n\n"
+                + "Press F9 to load a saved game."+ "\n"
+                + "====================================";
 
     }
 
     public String moveHero(int newRow, int newCol) {
+
+        if (!hero.isAlive()) {
+
+            return "Game Over.";
+
+        }
 
         if (combatActive) {
 
@@ -294,10 +327,7 @@ public class GameController {
 
             case 'E':
 
-                startCombat(newRow, newCol);
-
-                return gameMap.getEnemy(newRow, newCol).getMonsterType()
-                        + " is in front of you.\nPress SPACE to attack.";
+                return checkEnemy(newRow, newCol);
 
             case 'I':
 
